@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Саймон каже</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+
+        .game-container {
+            text-align: center;
+        }
+
+        .color-button {
+            width: 100px;
+            height: 100px;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            opacity: 0.9;
+        }
+
+        .red { background-color: red; }
+        .green { background-color: green; }
+        .yellow { background-color: yellow; }
+        .blue { background-color: blue; }
+
+        .color-button:active {
+            opacity: 0.7;
+        }
+
+        #score, #status {
+            font-size: 1.2em;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <h1>Саймон каже</h1>
+    <div id="score">Рахунок: 0</div>
+    <div id="status">Початок гри</div>
+    <div class="buttons">
+        <button id="red" class="color-button red"></button>
+        <button id="green" class="color-button green"></button>
+        <button id="yellow" class="color-button yellow"></button>
+        <button id="blue" class="color-button blue"></button>
+    </div>
+</div>
+<script>
+    const colors = ["red", "green", "yellow", "blue"];
+    let gameSequence = [];
+    let playerSequence = [];
+    let score = 0;
+
+    const sounds = {
+        red: new Audio('sounds/red-sound.mp3'),
+        green: new Audio('sounds/green-sound.mp3'),
+        yellow: new Audio('sounds/yellow-sound.mp3'),
+        blue: new Audio('sounds/blue-sound.mp3'),
+        error: new Audio('sounds/error-sound.mp3')
+    };
+
+    const updateStatus = (message) => document.getElementById("status").textContent = message;
+    const updateScore = () => document.getElementById("score").textContent = `Рахунок: ${score}`;
+
+    function playSequence() {
+        let i = 0;
+        const intervalId = setInterval(() => {
+            const color = gameSequence[i];
+            flashButton(color);
+            i++;
+            if (i >= gameSequence.length) clearInterval(intervalId);
+        }, 1000);
+    }
+
+    function flashButton(color) {
+        playSound(color);
+        const button = document.getElementById(color);
+        button.style.opacity = "0.5";
+        setTimeout(() => { button.style.opacity = "1"; }, 500);
+    }
+
+    function playSound(color) {
+        sounds[color].play();
+    }
+
+    function generateColor() {
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        gameSequence.push(randomColor);
+    }
+
+    function nextRound() {
+        playerSequence = [];
+        generateColor();
+        playSequence();
+        updateStatus("Ваш хід");
+    }
+
+    function checkPlayerMove() {
+        if (playerSequence.join('') === gameSequence.slice(0, playerSequence.length).join('')) {
+            if (playerSequence.length === gameSequence.length) {
+                score++;
+                updateScore();
+                setTimeout(() => nextRound(), 1000);
+            }
+        } else {
+            playSound("error");
+            updateStatus("Гра закінчена!");
+            gameSequence = [];
+            score = 0;
+            updateScore();
+        }
+    }
+
+    document.querySelectorAll(".color-button").forEach(button => {
+        button.addEventListener("click", (e) => {
+            const color = e.target.id;
+            playerSequence.push(color);
+            flashButton(color);
+            checkPlayerMove();
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        updateScore();
+        nextRound();
+    });
+</script>
+</body>
+</html>
