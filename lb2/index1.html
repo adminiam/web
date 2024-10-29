@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Інтерактивний опитувальник</title>
+</head>
+<body>
+<h1>Інтерактивний опитувальник</h1>
+<p>Натисніть кнопку, щоб почати опитування</p>
+<button onclick="startQuestionnaire()">Почати опитування</button>
+
+<script>
+    function startQuestionnaire() {
+        function isValidAge(age) {
+            return !isNaN(age) && age > 0 && age < 150;
+        }
+
+        let name = prompt("Будь ласка, введіть ваше ім'я:");
+        name = name ?? "Анонім";
+
+        let age;
+        do {
+            age = parseInt(prompt("Будь ласка, введіть ваш вік:"));
+        } while (!isValidAge(age));
+
+        let ageMessage;
+        if (age >= 18) {
+            ageMessage = "Ви досягли повноліття!";
+        } else {
+            ageMessage = "Ви ще не досягли повноліття.";
+        }
+        alert(ageMessage);
+
+        let additionalInfo = {};
+        if (confirm("Бажаєте продовжити опитування?")) {
+            let favoriteColor = prompt("Який ваш улюблений колір?");
+            additionalInfo.favoriteColor = favoriteColor ?? "Не вказано";
+
+            let hobby = prompt("Яке ваше хобі?");
+            additionalInfo.hobby = hobby ?? "Не вказано";
+        }
+
+        let summaryMessage = `
+Результати опитування:
+- Ім'я: ${name}
+- Вік: ${age} років
+- Статус: ${ageMessage}
+`;
+
+        if (Object.keys(additionalInfo).length > 0) {
+            summaryMessage += `
+- Улюблений колір: ${additionalInfo.favoriteColor}
+- Хобі: ${additionalInfo.hobby}
+`;
+        }
+
+        alert(summaryMessage);
+    }
+</script>
+</body>
+</html>
