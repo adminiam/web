@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React TaskList</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+</head>
+<body>
+<div id="root"></div>
+<script>
+    const { useState } = React;
+    function TaskList() {
+        const [tasks, setTasks] = useState([]);
+        const [newTask, setNewTask] = useState('');
+        const addTask = () => {
+            if (newTask.trim()) {
+                setTasks([...tasks, newTask]);
+                setNewTask('');
+            }
+        };
+        return React.createElement(
+            'div',
+            null,
+            React.createElement('ul', null,
+                tasks.map((task, index) =>
+                    React.createElement('li', { key: index }, task)
+                )
+            ),
+            React.createElement(
+                'input',
+                {
+                    type: 'text',
+                    value: newTask,
+                    onChange: (e) => setNewTask(e.target.value),
+                    placeholder: 'Enter a new task'
+                }
+            ),
+            React.createElement(
+                'button',
+                { onClick: addTask },
+                'Add Task'
+            )
+        );
+    }
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(TaskList));
+</script>
+</body>
+</html>

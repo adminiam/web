@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React ToggleText</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+</head>
+<body>
+<div id="root"></div>
+<script>
+    const { useState } = React;
+    function ToggleText() {
+        const [isTextVisible, setTextVisible] = useState(true);
+        return React.createElement(
+            'div',
+            null,
+            isTextVisible && React.createElement('p', null, 'Hello, React!'),
+            React.createElement(
+                'button',
+                { onClick: () => setTextVisible(!isTextVisible) },
+                isTextVisible ? 'Hide Text' : 'Show Text'
+            )
+        );
+    }
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(ToggleText));
+</script>
+</body>
+</html>

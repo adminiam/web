@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Timer</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+</head>
+<body>
+<div id="root"></div>
+<script>
+    const { useState, useEffect } = React;
+    function Timer() {
+        const [time, setTime] = useState(new Date());
+        useEffect(() => {
+            const interval = setInterval(() => setTime(new Date()), 1000);
+            return () => clearInterval(interval);
+        }, []);
+        const formatTime = (date) =>
+            date.toLocaleTimeString('en-US', { hour12: false });
+        return React.createElement('h1', null, formatTime(time));
+    }
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(Timer));
+</script>
+</body>
+</html>
